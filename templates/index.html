@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0e5264">
+    <title>تشخيص أمراض الكلى | Kidney AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="/" aria-label="الصفحة الرئيسية">
+            <span class="brand-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" role="presentation">
+                    <path d="M19 7c-7-3-13 4-13 13 0 8 5 14 11 13 5-1 5-7 5-12V9c0-1-1-2-3-2Z" fill="currentColor" opacity=".95"/>
+                    <path d="M29 7c7-3 13 4 13 13 0 8-5 14-11 13-5-1-5-7-5-12V9c0-1 1-2 3-2Z" fill="currentColor" opacity=".95"/>
+                    <path d="M24 4v40M19 23c2 1 4 4 5 7m5-7c-2 1-4 4-5 7" fill="none" stroke="#0e5264" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+            </span>
+            <span class="brand-copy">
+                <strong>تشخيص أمراض الكلى</strong>
+                <small>باستخدام الذكاء الاصطناعي</small>
+            </span>
+        </a>
+        <div class="topbar-meta"><span class="status-dot"></span> يعمل محليًا على جهازك</div>
+    </header>
+
+    <main class="page-shell">
+        <section class="hero">
+            <div class="hero-copy">
+                <span class="eyebrow"><span class="eyebrow-dot"></span> نظام تجريبي لتحليل الصور</span>
+                <h1>تحليل صور الكلى،<br><span>بخطوات بسيطة.</span></h1>
+                <p>ارفع صورة طبية مدعومة، وسيعرض النموذج الفئة التي يتوقعها ودرجات الفئات الأربع.</p>
+                <div class="hero-note">
+                    <span class="note-icon" aria-hidden="true">i</span>
+                    <span>أداة مساعدة تجريبية وليست بديلًا عن تقييم الطبيب المختص.</span>
+                </div>
+            </div>
+            <div class="kidney-art" aria-hidden="true">
+                <div class="art-ring ring-one"></div>
+                <div class="art-ring ring-two"></div>
+                <svg viewBox="0 0 220 180">
+                    <defs>
+                        <linearGradient id="kidneyGrad" x1="0" x2="1" y1="0" y2="1">
+                            <stop offset="0" stop-color="#9ce5e3"/>
+                            <stop offset="1" stop-color="#198b96"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M101 37C79 10 42 20 34 53 24 88 43 121 70 117 91 114 94 92 92 74 91 59 96 47 101 37Z" fill="url(#kidneyGrad)"/>
+                    <path d="M119 37c22-27 59-17 67 16 10 35-9 68-36 64-21-3-24-25-22-43 1-15-4-27-9-37Z" fill="url(#kidneyGrad)"/>
+                    <path d="M109 21v56c0 12-9 16-9 29v43m10-72c0 12 9 16 9 29v43" fill="none" stroke="#e6ffff" stroke-width="7" stroke-linecap="round"/>
+                    <path d="M89 61c10 5 13 12 20 19m22-19c-10 5-13 12-20 19" fill="none" stroke="#e6ffff" stroke-width="5" stroke-linecap="round"/>
+                </svg>
+                <span class="art-caption">Kidney AI</span>
+            </div>
+        </section>
+
+        {% if error %}
+        <div class="alert alert-error" role="alert">
+            <span class="alert-symbol" aria-hidden="true">!</span>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <div class="workspace">
+            <section class="panel upload-panel">
+                <div class="panel-heading">
+                    <span class="heading-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z"/><circle cx="9" cy="9" r="1.7"/><path d="m5 17 4.5-4.5 3 3 2.5-2.5L19 17"/></svg>
+                    </span>
+                    <div>
+                        <h2>إدخال الصورة</h2>
+                        <p>اختر صورة الأشعة التي تريد تحليلها</p>
+                    </div>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" id="upload-form">
+                    <label class="dropzone" for="image" id="dropzone">
+                        <span class="upload-cloud" aria-hidden="true">
+                            <svg viewBox="0 0 48 48"><path d="M14 33H11a7 7 0 0 1-.5-14A13.5 13.5 0 0 1 36 16a9 9 0 0 1 1 17h-3M24 39V22m-7 7 7-7 7 7"/></svg>
+                        </span>
+                        <strong class="file-picker-title" id="file-picker-title">اسحب الصورة إلى هنا أو اخترها</strong>
+                        <span class="dropzone-hint">اضغط لتصفح الملفات من جهازك</span>
+                        <span class="file-types">JPG · PNG · WEBP · TIFF · BMP <i>— حتى 10 MB</i></span>
+                        <input id="image" name="image" type="file"
+                               accept=".jpg,.jpeg,.png,.webp,.tif,.tiff,.bmp" required>
+                    </label>
+
+                    <div class="preview-wrap" id="preview-wrap" hidden>
+                        <div class="preview-topline">
+                            <span>معاينة الصورة المختارة</span>
+                            <button type="button" class="text-button" id="remove-image">إزالة الصورة</button>
+                        </div>
+                        <img id="image-preview" alt="معاينة الصورة المختارة">
+                    </div>
+
+                    <button class="primary-button" type="submit">
+                        <span>تحليل الصورة</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 18a8 8 0 1 1 5.7-2.4L21 21M16 10a6 6 0 0 1-6 6"/></svg>
+                    </button>
+                    <p class="privacy-note"><span aria-hidden="true">✓</span> تتم معالجة الصورة ضمن تطبيقك المحلي.</p>
+                </form>
+            </section>
+
+            <section class="panel results-panel" aria-live="polite">
+                {% if result %}
+                <div class="panel-heading result-heading">
+                    <span class="heading-icon result-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="m12 3 7 3v5c0 4.5-3 7.5-7 10-4-2.5-7-5.5-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+                    </span>
+                    <div>
+                        <h2>نتيجة التحليل</h2>
+                        <p class="file-name">{{ result.filename }}</p>
+                    </div>
+                    <span class="result-tag">اكتمل التحليل</span>
+                </div>
+
+                <div class="prediction-card">
+                    <div class="prediction-main">
+                        <span class="result-label">الفئة المتوقعة</span>
+                        <h3>{{ result.predicted_class_ar }}</h3>
+                        <span class="english-class">{{ result.predicted_class }}</span>
+                    </div>
+                    <div class="confidence-box">
+                        <strong>{{ "%.2f"|format(result.confidence_percent) }}%</strong>
+                        <span>درجة النموذج</span>
+                    </div>
+                </div>
+
+                <div class="probability-heading">
+                    <h3>درجات الفئات الأربع</h3>
+                    <span>حسب مخرجات النموذج</span>
+                </div>
+                <div class="probability-list">
+                    {% for item in result.probabilities_ar %}
+                    <div class="probability-row {% if item.name == result.predicted_class %}is-predicted{% endif %}">
+                        <div class="probability-label">
+                            <span class="category-dot dot-{{ loop.index }}"></span>
+                            <span class="category-name">{{ item.name_ar }}</span>
+                            <span class="english-class">{{ item.name }}</span>
+                        </div>
+                        <strong class="probability-value">{{ "%.2f"|format(item.percent) }}%</strong>
+                        <div class="mini-track" role="img" aria-label="{{ item.name_ar }}: {{ "%.2f"|format(item.percent) }}%">
+                            <div class="mini-fill fill-{{ loop.index }}" style="width: {{ [[item.percent, 0]|max, 100]|min }}%;"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="medical-disclaimer">
+                    <span class="disclaimer-icon" aria-hidden="true">i</span>
+                    <p>هذه النتيجة تقدير صادر عن نموذج ذكاء اصطناعي، ولا تؤكد وجود مرض أو تنفيه. راجع الطبيب المختص لتفسير الصورة واتخاذ القرار الطبي.</p>
+                </div>
+                <a class="secondary-button" href="/">تحليل صورة أخرى <span aria-hidden="true">↻</span></a>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-illustration" aria-hidden="true">
+                        <svg viewBox="0 0 120 100">
+                            <rect x="17" y="10" width="86" height="76" rx="12" fill="#eaf7f7" stroke="#c9e9e9" stroke-width="2"/>
+                            <rect x="28" y="23" width="64" height="49" rx="7" fill="#fff" stroke="#d8ebed"/>
+                            <path d="M41 56c-7-8-2-20 6-20 7 0 9 8 7 13-1 5-5 10-13 7Zm38 0c7-8 2-20-6-20-7 0-9 8-7 13 1 5 5 10 13 7Z" fill="#64bdc0"/>
+                            <path d="M60 31v31" stroke="#16828a" stroke-width="3" stroke-linecap="round"/>
+                            <circle cx="90" cy="75" r="15" fill="#087f86" stroke="#fff" stroke-width="4"/>
+                            <path d="M90 68v14m-7-7h14" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span class="empty-kicker">جاهز للبدء</span>
+                    <h2>ستظهر النتيجة هنا</h2>
+                    <p>اختر صورة من اللوحة المقابلة، ثم اضغط على «تحليل الصورة» لعرض الفئة المتوقعة ودرجات الفئات.</p>
+                    <div class="empty-steps">
+                        <span><b>1</b> اختر الصورة</span>
+                        <span class="step-line"></span>
+                        <span><b>2</b> ابدأ التحليل</span>
+                        <span class="step-line"></span>
+                        <span><b>3</b> راجع النتيجة</span>
+                    </div>
+                </div>
+                {% endif %}
+            </section>
+        </div>
+
+        <footer class="footer">
+            <span>Kidney AI <i>·</i> تصنيف تجريبي لصور الكلى</span>
+            <span>لا يُستخدم لاتخاذ قرارات طبية مستقلة</span>
+        </footer>
+    </main>
+
+    <script>
+        (function () {
+            const input = document.getElementById("image");
+            const title = document.getElementById("file-picker-title");
+            const dropzone = document.getElementById("dropzone");
+            const previewWrap = document.getElementById("preview-wrap");
+            const preview = document.getElementById("image-preview");
+            const removeButton = document.getElementById("remove-image");
+            let currentUrl = null;
+
+            function showFile(file) {
+                if (!file) return;
+                title.textContent = file.name;
+                if (currentUrl) URL.revokeObjectURL(currentUrl);
+                currentUrl = URL.createObjectURL(file);
+                preview.src = currentUrl;
+                previewWrap.hidden = false;
+                dropzone.classList.add("has-file");
+            }
+
+            input.addEventListener("change", function () {
+                showFile(this.files && this.files[0]);
+            });
+
+            removeButton.addEventListener("click", function () {
+                input.value = "";
+                title.textContent = "اسحب الصورة إلى هنا أو اخترها";
+                preview.removeAttribute("src");
+                previewWrap.hidden = true;
+                dropzone.classList.remove("has-file");
+                if (currentUrl) URL.revokeObjectURL(currentUrl);
+                currentUrl = null;
+            });
+
+            ["dragenter", "dragover"].forEach(function (eventName) {
+                dropzone.addEventListener(eventName, function (event) {
+                    event.preventDefault();
+                    dropzone.classList.add("is-dragging");
+                });
+            });
+            ["dragleave", "drop"].forEach(function (eventName) {
+                dropzone.addEventListener(eventName, function (event) {
+                    event.preventDefault();
+                    dropzone.classList.remove("is-dragging");
+                });
+            });
+            dropzone.addEventListener("drop", function (event) {
+                const files = event.dataTransfer && event.dataTransfer.files;
+                if (!files || !files.length) return;
+                try {
+                    const transfer = new DataTransfer();
+                    transfer.items.add(files[0]);
+                    input.files = transfer.files;
+                    showFile(files[0]);
+                } catch (e) {
+                    // The regular file picker remains available if drag-and-drop is unsupported.
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
